@@ -6,6 +6,9 @@ You can do all what ST16S can do, tilt, pan in the different modes.
 
 ![Screenshot](Screenshot.png)
 
+The charts on the right showing the results sent by MAV message MOUNT_ORIENTATION.
+
+
 
 Gimbal control is done with a Yuneec specific MAV message, MsgID 5000. The CRC_EXTRA for this message is 252.
 
