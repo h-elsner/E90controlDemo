@@ -8,4 +8,7 @@ You can do all what ST16S can do, tilt, pan in the different modes.
 
 
 Gimbal control is done with a Yuneec specific MAV message, MsgID 5000. The CRC_EXTRA for this message is 252.
+
+
+
 Gimbal calibration is done with a Yuneec specific MAV message, MsgID 5002. The CRC_EXTRA for this message is 224.
