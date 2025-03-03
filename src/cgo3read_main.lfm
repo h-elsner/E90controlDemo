@@ -1,0 +1,473 @@
+object Form1: TForm1
+  Left = 1459
+  Height = 679
+  Top = 141
+  Width = 985
+  Caption = 'Form1'
+  ClientHeight = 679
+  ClientWidth = 985
+  Constraints.MinHeight = 600
+  Constraints.MinWidth = 985
+  OnActivate = FormActivate
+  OnClose = FormClose
+  OnCreate = FormCreate
+  SessionProperties = 'cbPort.Text;cbRecord.Checked;cbSpeed.Text;Height;knPanControl.Position;Left;rgPanMode.ItemIndex;rgTiltMode.ItemIndex;SaveDialog1.FileName;SaveDialog1.InitialDir;Top;Width;WindowState;tbTiltControl.Position'
+  ShowHint = True
+  LCLVersion = '3.7.0.0'
+  object upperPanel: TPanel
+    Left = 0
+    Height = 661
+    Top = 0
+    Width = 144
+    Align = alLeft
+    ClientHeight = 661
+    ClientWidth = 144
+    TabOrder = 0
+    object cbPort: TComboBox
+      Left = 9
+      Height = 28
+      Top = 10
+      Width = 128
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        '/dev/ttyUSB0'
+        '/dev/ttyUSB1'
+        '/dev/ttyAMA0'
+        '/dev/ttyAMA1'
+        '/dev/ttyACM0'
+        '/dev/ttyACM1'
+      )
+      TabOrder = 0
+      Text = '/dev/ttyUSB0'
+      TextHint = 'Serial port'
+      OnDblClick = cbPortDblClick
+    end
+    object cbSpeed: TComboBox
+      Left = 9
+      Height = 28
+      Top = 50
+      Width = 128
+      ItemHeight = 0
+      Items.Strings = (
+        '14400'
+        '19200'
+        '28800'
+        '38400'
+        '57600'
+        '115200'
+        '500000'
+      )
+      TabOrder = 1
+    end
+    object btnConnect: TBitBtn
+      Left = 9
+      Height = 30
+      Top = 88
+      Width = 121
+      Action = acConnect
+      Images = ImageList1
+      ImageIndex = 3
+      TabOrder = 2
+    end
+    object btnClose: TBitBtn
+      Left = 9
+      Height = 30
+      Top = 248
+      Width = 121
+      Action = acClose
+      Images = ImageList1
+      ImageIndex = 0
+      TabOrder = 3
+    end
+    object btnDisconnect: TBitBtn
+      Left = 9
+      Height = 30
+      Top = 136
+      Width = 121
+      Action = acDisconnect
+      Images = ImageList1
+      ImageIndex = 4
+      TabOrder = 4
+    end
+    object cbRecord: TCheckBox
+      Left = 9
+      Height = 23
+      Top = 192
+      Width = 82
+      Caption = 'cbRecord'
+      TabOrder = 5
+    end
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 18
+    Top = 661
+    Width = 985
+    Panels = <    
+      item
+        Width = 100
+      end    
+      item
+        Width = 100
+      end    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object pcMain: TPageControl
+    Left = 144
+    Height = 661
+    Top = 0
+    Width = 841
+    ActivePage = tsFC
+    Align = alClient
+    Images = ImageList1
+    ParentFont = False
+    TabIndex = 0
+    TabOrder = 2
+    object tsFC: TTabSheet
+      Caption = 'FC'
+      ClientHeight = 631
+      ClientWidth = 831
+      ImageIndex = 5
+      object knPanControl: TmKnob
+        Left = 208
+        Height = 60
+        Top = 40
+        Width = 60
+        Position = 100
+        Max = 4096
+        OnChange = knPanControlChange
+      end
+      object rgPanMode: TRadioGroup
+        Left = 136
+        Height = 121
+        Top = 16
+        Width = 48
+        AutoFill = True
+        Caption = 'Pan'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 104
+        ClientWidth = 46
+        ItemIndex = 0
+        Items.Strings = (
+          'F'
+          'P'
+          'G'
+        )
+        TabOrder = 1
+      end
+      object rgTiltMode: TRadioGroup
+        Left = 64
+        Height = 121
+        Top = 16
+        Width = 48
+        AutoFill = True
+        Caption = 'Tilt'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 104
+        ClientWidth = 46
+        ItemIndex = 0
+        Items.Strings = (
+          'A'
+          'V'
+        )
+        TabOrder = 2
+      end
+      object tbTiltControl: TTrackBar
+        Left = 8
+        Height = 128
+        Top = 16
+        Width = 37
+        Max = 3412
+        Min = 800
+        Orientation = trVertical
+        Position = 900
+        TabOrder = 3
+      end
+      object lblPanControl: TLabel
+        Left = 224
+        Height = 16
+        Top = 16
+        Width = 32
+        Caption = '2048'
+      end
+      object btnCenter: TButton
+        Left = 208
+        Height = 24
+        Top = 112
+        Width = 64
+        Caption = 'Center'
+        TabOrder = 4
+        OnClick = btnCenterClick
+      end
+      object chTilt: TChart
+        Left = 288
+        Height = 207
+        Top = 8
+        Width = 536
+        AxisList = <        
+          item
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Text.Strings = (
+          'Tilt'
+        )
+        Title.Visible = True
+        Anchors = [akTop, akLeft, akRight]
+        object chTiltLineSeries1: TLineSeries
+          LinePen.Color = clPurple
+        end
+      end
+      object chPan: TChart
+        Left = 288
+        Height = 207
+        Top = 208
+        Width = 536
+        AxisList = <        
+          item
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Text.Strings = (
+          'Pan'
+        )
+        Title.Visible = True
+        Anchors = [akTop, akLeft, akRight]
+        object chPanLineSeries1: TLineSeries
+          LinePen.Color = clGreen
+        end
+      end
+      object chRoll: TChart
+        Left = 288
+        Height = 207
+        Top = 416
+        Width = 536
+        AxisList = <        
+          item
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Text.Strings = (
+          'Roll'
+        )
+        Title.Visible = True
+        Anchors = [akTop, akLeft, akRight]
+        object chRollLineSeries1: TLineSeries
+          LinePen.Color = clNavy
+        end
+      end
+      object lblBootTime: TLabel
+        Left = 8
+        Height = 16
+        Top = 170
+        Width = 73
+        Caption = 'lblBootTime'
+      end
+      object lblBootTimeOut: TLabel
+        Left = 136
+        Height = 16
+        Top = 168
+        Width = 96
+        Caption = 'lblBootTimeOut'
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Images = ImageList1
+    Left = 96
+    Top = 264
+    object acConnect: TAction
+      Caption = '&Connect'
+      ImageIndex = 3
+      OnExecute = acConnectExecute
+    end
+    object acClose: TAction
+      Caption = 'Close'
+      ImageIndex = 0
+      OnExecute = acCloseExecute
+    end
+    object acDisconnect: TAction
+      Caption = '&Disconnect'
+      ImageIndex = 4
+      OnExecute = acDisconnectExecute
+    end
+    object acScanPorts: TAction
+      Caption = 'acScanPorts'
+      ImageIndex = 2
+      OnExecute = acScanPortsExecute
+    end
+  end
+  object XMLPropStorage1: TXMLPropStorage
+    StoredValues = <>
+    Left = 32
+    Top = 424
+  end
+  object SaveDialog1: TSaveDialog
+    Filter = 'CSV file|*.csv|Text files|*.txt|Screenshot|*.png|All files|*'
+    Left = 40
+    Top = 264
+  end
+  object timerFCHeartbeat: TTimer
+    Enabled = False
+    OnTimer = timerFCHeartbeatTimer
+    Left = 96
+    Top = 352
+  end
+  object timerFCCommand: TTimer
+    Enabled = False
+    Interval = 50
+    OnTimer = timerFCCommandTimer
+    Left = 24
+    Top = 352
+  end
+  object ImageList1: TImageList
+    Left = 88
+    Top = 424
+    Bitmap = {
+      4C7A070000001000000010000000E90C00000000000078DAED98795454D71DC7
+      A7A7C6D69CA4B139698C693B4D34D1A00931A01122C3A2A2A8308C6050104481
+      0082544040655510642B238B914540164505D90C22AB6C026157916113440145
+      0DC5B08823E9B7F73E1C1C60064B4EFB5FDF39DF03EFBDFB79BF7B7FBFEFEFF2
+      1E454545AC22A20B172AD99191B5F27171559F15BDBC262E7A9FCD1E162C59D2
+      5723E9BE96962082C5EAC58205F55D2121211CF17BF499B2B25D25E3F7D3BB7C
+      7D7DCDAF5CB9F2D964BE88F0D7C062A583C3F114646464704471C7D92AD0FBEF
+      BCA3893D7BF680CFE797E4E4E4B05FF11D11A231F2F2E7909494644EAFD339D3
+      B8E3CF56C7C2850B71E4C81146972F5F9617F166669DCEBFFB5DE3F0F8384F32
+      076BBCF7DE63F2FB43664E2C16879CBFC770DEDEDE8F535252B64ECD017D068B
+      D5F83256135EC53D00923CD8D9D931EC850B170C25E5908AC51A7CC988749EB0
+      9AB0B6B666624B8A3B331F41F2213FB166699CA8BEE3EB15E7E308BF19A4665D
+      536B36B97EBD24FF8FA7B0E362B383413C612E8D0D09A9E7B0D91D2476D94B26
+      F8A55ECD415636AE444BCB2C622A4BBDB560C168178BD5323156464695280F22
+      3FBCD212A8ABAB2788F3D4F3AFEA148737DE78036BD7AE6572A5A0D02E187FC6
+      ABFAFBFBFB0BC47D37995F32C18AFC395E0FE9F5CFC8B8FEDE8103F5E6B2B2CE
+      251C8ED6042BCAF581038DE666662109AFAB3F9957848B8B0B3326323272529E
+      682FD0EB927C277E7CFCF1A28F17BCFF01479AD8EC8F381F7EF8E16F58520EAE
+      9676809B9B1B44727D29D1B98383E30B3939B939D2782D4D6E809797177C7C7C
+      70E2C489091D3FEE0B7ADDDEFEC0D84CFCD2A54BF56FDFBE8D6641339A9B5FA9
+      A9A909376FDE84AEEEB6D8B7DE7A4B1ACE5ABEFCF37524F6587A5A3AC445E2FF
+      EBFD3F7DA0B270E1877F93C6CE9D3B770E87A3DCECE8E8C8CC555CF41A19F207
+      D60C879CDC4A2B151515264F4141419344AFCDC4BFFDF6DB6FA9AB6F78ACA2A2
+      0AA5359C6892A3602A9EB6CE0D5757371C3A74F8B99C9C3C471A3FFF9DF932CA
+      1C65AC59A35441CFDF7CF3CDDFAC555B1F117C2204028100ADADADA8ADAD8586
+      C6263749FC3299E55CEAFB552BBF4EA7E70A0A8ADB1B1A6EA0AAAA0A0505058C
+      EAEAEA5051510179B9957A53F95DBB768573B95C6CDCA8012E57FBA99EDE76A1
+      9D9D3DAD373A3A3A48FD04CC33680DD5D76F0898CA1B1919313CE1A0A3A3034D
+      4DAD7F595A5AC2CACA0A3D3D3DB873E7CEC41CD4D76F9CC67FF2C9A72B3FFD74
+      49808AB2AAF7329965EA6BBE51326D696941457905F2F2F288F299B5D0F9ABA9
+      AD3B367FC18AF9BFFFE38AF93379C1CF2F2025272777B8B1B111D493959595A4
+      FF2EE28B2F64D72C563EB37FC1AA33F6ACD71C248FDB4C4DCC2EBABAB8FD1815
+      1535C6D968E5C756E46F61730772E7FF59F57DD62C0EE2FB77DFF92BEF6BD9AD
+      453E6FBEAFFA17F17B75F6FBF16B25E2078AF351696A0869C7D8E8338C3EEDC7
+      D0A35E665CA5BF0F6CD67E39894FE06D61724C555C5CCCD4ABBDBD1DB5553FA2
+      AAAC0485572E233F331505467A201E9DC61B7C2103555555A6E768FDB5B5B511
+      E8EF87CBA929F8BB9525941457E3B0BD0DC236ADC78D5321D3F892DDFA303030
+      4077773746474761B873278EB8BA3073EEBB23802E770B1A4A72504AC6499A3F
+      5D17E5A9E7869F0EC0DAD2022A4A6BF0A8A3194F3A9BA0A3B909750597997125
+      9EEED3F83C433DAC5EBD1A99E969B030334162741434353660FFDEEFD052558C
+      AFBE588EF8503F86CF3FEC2831BE70781023FD8FF0F3837BE8BFD78AC7EDB7F0
+      A0A91ADD0D65E8AA2A6044C765D9EE9BC68B9EF13A5136D5C2741AFF53C1553C
+      C84AC7DD9424B426C6A231EA14EA4283985CD1F5D239675A5B22D9C41889FA7A
+      9378496C75903FAEFB78E29AFB61E438DA4D6263785A93F8FBE9C9B8733E0176
+      061A334AC49EDAB87E124F59416C1433867AEBEB4FFECCF8F619F1EC40770793
+      B740278B09366C9DEA249EB2D4539497FDDB0730E66D98E47FFA0CCA8BD8A93C
+      65E97A295F94998CB2FCABA822391517E545AC384F0FFAFBAF113958B351FB45
+      6FE5C638D7170D91B62355C1E61A338D7D521437E741DE69764F569862676A00
+      B725E96858739227042901B895740CC5DE7A23D2D84785B1F37AAF8697DFFF21
+      149D1941684DF643EBA540B467854390760235510EC83EB45E288DEFC93AE9D4
+      9D1B8DDEB264DC2B4C4447CE69B46486E24682076E9CF3469EC756A45A29AB48
+      62DBF2C2975CBFECF3CBBDC204746647E2F6791F34C4B9A13AF200EAE28FE05A
+      8009922D954E4A9E73645A6E66C8F383D73D91957E14CDE9E46F682A1F3F9EDA
+      8F52BE392AA39C9061B719F106ABB9E26C5F41CC9C9EEC53ADDD79B1A03A73CE
+      7BCCA9D803E97C83B18AEFF7A33AC605F9DEFA280DD98773A62A88E47DA53869
+      BD3F84B0EF66F0C7D77B2D11CD9782703ECC4E98ECBFFD60E2218DB1BC634628
+      E2EF45BEFF1E9CD65985E0F59FB3C5F93B977C15DB488EBB0AE2D174F1385A2E
+      87A12ED61927FD8C5FD8E4BB2274FF06A43B6A23D1440DFC75CB5B03D43E9B23
+      CE37C5BB721B13DC99FAD05CD5443AA03ED10B95914E700B3483D5556704F256
+      BD08525B96E6ABBA74DED4DCD585DB64DC22796E4A09C28FE176283B61896BFE
+      C628E15B907C9BC1C372E30B1FAE9C8CA47AD584EDB5AF8B76C2ED94405493FC
+      D69C7165F27CFDE47E66CD29361A08D7FACA49124B3C6C571361878684A3CC7C
+      AB983C1B21CD6E1392CC5411B35D01A736AF28E7AFFB7C9E24BED4571FF5F16E
+      A825BE280A3447BAFD269C35523819BB7D25379CD4286C932C9BBF6ED91C693E
+      CD75D98C223F635CF333419ACD46EA0BB5D9F46386ADDA82E4BD1C24192B8EC4
+      6E5FA532DB7E7E9D06CA2FCE79529AC826FE54243DC5257DEC40FA58782BC629
+      9BE47DEE4CEC3FCB92E63D298C2B7F90178DEE2BA770373304ADA417A847EA89
+      B74A7DB667CFC493984E0F8B12D157998E9ED20B8C37DBAF44E076B23F1A1249
+      7F3949EF7FD28773EF65F09F3D283E8FBBB9B168267BCECDB39EA88B3E48FAFF
+      180A7D0C71692FC761A6F8649DDE2DC9BE68CD0C63FAB83AC29EF165E5E943C8
+      B49FDEC32FF73C764C4CCCE9888888587A5EC1FFCE95ACF319EDFFEA58D7973D
+      6C4D7A58997A72A2877F2A3D3B8FEC1F69756991A3D9D9D9C8CF27FB7D6020F3
+      0CB24EA5541BD5913C2F43E2670BE4F9EF46044F9EF6215B6C9F6D7D5894809E
+      6B09C88AF67F919A9A4ADF83629D9D9D7F4BBE3BDF25FE50229E1CB964AF8978
+      631504A9C9B4FAAA2C9D339EAB7036DD671F965FC2FDA273684BE7E3877FD83D
+      2FF63552266CAC858545337947FFE0E4E62F9548CC61D2FB693ECA9F4EF4C3DD
+      D440C53BA981CC3EDB4CF610BA77D0FA261CDA210C0D0DA5DF9DF8F6DB6F9BC9
+      3BFABB24267B6ACE04673DB882739E4C6D45FB6C3DA96F458403FCF6ED20DF5F
+      C7C9770137565A9DEAC26D1D1AE25C27EDB305BE245764DFC9F7DD03AFAD4A42
+      B72D0A12FBB7F6A4D5DCF2C0DDC21BE7BC5013EBC2ECB3342EDD670BFFF11DCE
+      EF5527EF8BB24ED26297F91A08CB432C99FEBFFEBD2DAEB8E822D96A03127671
+      44FB6C39C9F53CA9FDEFBA39FBDA7143E4B8EB21C9E41B21E96187A8AD72DC93
+      9BBE54A4F59DBACF4E55FA7ED579C9E64AD989460AC2986D2BE7FE9A1EFFE8A3
+      8F98F7E6D9883222B6BEBE1E9D9D9DB3525A5A1A7D77619E45CF793CDE7F1CDB
+      D6D61667CE9C99C4D39F5021CB61BD5E94FD9FF0ACFFF3BF9617D57436A23CF5
+      1FF5D26C591A8FF2D4C3A2E7ECDEBD7B46DFB18C59C4F0E36345AC48C6C6C60C
+      2F4DD4DF227EC58A15D3DEBB45B9A06345FFAB1589894DEE8B6B2A2B9AD36CF4
+      DF7E57A0B2B1B9B7D8DAAACBCDD2EA4E9BA959FBE01EB3D64123D396B69DA64D
+      6E3B4C1A17CFC8EEBBAF6B65D5D91B14FA130A4B475173EB39CAAA9FE3E20F43
+      30B7BD07DD5D377A794675BA52D9BD77872E5EFA19CDEDBF20355788E0042102
+      A285387DE105722BC660EBD207CD9D35431A3BAA263D63DFBEAE4584ED49481A
+      4463DB2F381E298447F0009C839EC2236C14EE21CFE114388AF3574661FAF7FB
+      50DF5ED1A3A6777D918827ACBB9BD723D4368E31F1DC439FC1D1BF1FFB8E8D4C
+      92E9E14124A68D4259BB01CADB4ADC45BC855547DBD9B46144270B71307000DB
+      8C9F4894E9C19F71346808873CFAF08D6E519B8837DBDB369296F31C1EA142D8
+      7A0F48FD1F8C967E1F7659F5E3FBE8A7F85ABB70E2DBCBD8B475242EF9196C7D
+      4661E93932236F68FE08DF9F7E0A395EFE046F6822683B1AD80FF7E067303A30
+      C88C9324ED9D7D70F11A80A3CB3DC86EC99D98FF8EDD8DEE5BF4DA109F3C023D
+      B301E898F74F633577F442C7A017B109C358C92BC3B2CD5727F2B7CDF8E622DD
+      3DF53D7BACEF232E6598C915CFF011C371F57BA1A9D70B1E514CFC10B6ED6EA2
+      6C8FCC96AC45E21ED032A8D5DDA45F3D64F8DD5DC49D1B86BBCF3FB1D3B40FFA
+      460FE076AC1F316786B0D54880E59BB387082BD1831B7654EAAEFDB6BC5749A7
+      068ECE0FC10FE9676477A81BF25AC594ED95C68AA4B2AD74F137BC123705DDC2
+      B6555B0B06576CC91F94E55E6D5BAE99EDB654236BF17FBB5FFF0D8F351EA5
+    }
+  end
+end
