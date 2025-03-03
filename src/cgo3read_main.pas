@@ -282,7 +282,6 @@ begin
   SetUInt16ToMsg(msg, 32, mode);
   SetUInt16ToMsg(msg, 34, 2048);
   SetCRC(msg, LengthFixPartFD, CRC_EXTRA_cmd5000);
-  msg.valid:=true;
 end;
 
 function ConnectUART(port, speed: string): string;
@@ -436,7 +435,7 @@ begin
     msg.msgbytes[i]:=UART.RecvByte(timeout);
 
   msg.msgid32:=MAVgetUInt32(msg, 7) and $FFFFFF;
-  if CheckCRC16MAV(msg, LengthFixPartFD, GetCRCextra(msg.msgid32)) then begin
+  if CheckCRC16MAV(msg, LengthFixPartFD, 1, true, GetCRCextra(msg.msgid32)) then begin
     msg.sysid:=msg.msgbytes[5];
     msg.targetid:=msg.msgbytes[6];
     msg.msgid:=msg.msgbytes[7];
@@ -543,7 +542,6 @@ begin
     msg.msgbytes[17]:=3;
     msg.msgbytes[18]:=3;
     SetCRC(msg, LengthFixPartFD, CRC_EXTRA_heartbeat);
-    msg.valid:=true;
     if SendUARTMessage(msg, LengthFixPartFD) then
       Inc(SequNumberTransmit);
   end;
