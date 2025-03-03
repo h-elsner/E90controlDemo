@@ -40,14 +40,23 @@ SOFTWARE.
 
 *******************************************************************************)
 
-{This unit needs following additional components:
-- Synapse
+{App purpose: Control a C23/E90 camera to use it for other purposes.
 
+This Demo shows how to control the gimbal of a C23 or E90 camera (and possibly
+all cameras that fits H Plus, H3 or H520). You can do all what ST16S can do,
+tilt, pan, tilt mode, pan mode.
+The charts on the right showing the results sent by MAV message MOUNT_ORIENTATION.
+
+
+Gimbal control is done with a Yuneec specific MAV message, MsgID 5000.
+The CRC_EXTRA for this message is 252.
+
+This unit needs following additional components:
+- Synapse
 
 Also the units mav_def and mav_msg from repository "Common units" are needed:
 https://github.com/h-elsner/common_units
-The unit msg57 is a dummy for Yuneec NFZ license procedure,
-which is not open source.
+
 }
 
 unit CGO3read_main;
