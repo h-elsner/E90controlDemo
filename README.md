@@ -12,6 +12,10 @@ The charts on the right showing the results sent by MAV message MOUNT_ORIENTATIO
 
 Gimbal control is done with a Yuneec specific MAV message, MsgID 5000. The CRC_EXTRA for this message is 252.
 
-
-
 Gimbal calibration is done with a Yuneec specific MAV message, MsgID 5002. The CRC_EXTRA for this message is 224.
+
+
+
+To compile this tool you need the common units from this repo: https://github.com/h-elsner/common_units 
+
+Also the packages Synapse and Industrial stuff have to be installed (use OPM).
