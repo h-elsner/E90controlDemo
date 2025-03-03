@@ -26,4 +26,5 @@ resourcestring                                     {english}
   rsDisconnected='Disconnected';
   rsConnected='Connected';
   rsTime='Time';
+  errNoUSBport='No USB port available';
 

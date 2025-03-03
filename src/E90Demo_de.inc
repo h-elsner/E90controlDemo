@@ -26,4 +26,5 @@ resourcestring                                     {deutsch}
   rsDisconnected='Getrennt';
   rsConnected='Verbunden';
   rsTime='Zeit';
+  errNoUSBport='Kein USB-Port verfügbar';
 
