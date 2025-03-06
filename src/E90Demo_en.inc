@@ -1,6 +1,6 @@
 resourcestring                                     {english}
 
-  captsFC='Act as flight controller to C23/E90 (Demo)';
+  captsFC='Demo: Control a C23/E90';
   capBootTime='Time since boot';
   hntBootTime='Time since boot of the device';
   capPort='Scan USB ports...';
@@ -26,5 +26,6 @@ resourcestring                                     {english}
   rsDisconnected='Disconnected';
   rsConnected='Connected';
   rsTime='Time';
+  rsValue='Value';
   errNoUSBport='No USB port available';
 

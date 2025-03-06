@@ -1,6 +1,6 @@
 resourcestring                                     {deutsch}
 
-  captsFC='Steuerung als FlightController für C23/E90 (Demo)';
+  captsFC='Demo: Steuerung einer C23/E90';
   capBootTime='Zeit seit Boot';
   hntBootTime='Zeit seit Booten des Systems';
   capPort='USB ports suchen...';
@@ -26,5 +26,6 @@ resourcestring                                     {deutsch}
   rsDisconnected='Getrennt';
   rsConnected='Verbunden';
   rsTime='Zeit';
+  rsValue='Wert';
   errNoUSBport='Kein USB-Port verfügbar';
 

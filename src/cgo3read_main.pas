@@ -69,7 +69,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   lclintf, lcltype, Buttons, ActnList, Process, XMLPropStorage, ComCtrls,
   ValEdit, TAGraph, TASeries, TAChartUtils, synaser, MKnob,
-  clipbrd, Menus, mav_def, mav_msg;
+  clipbrd, Menus, Grids, mav_def, mav_msg;
 
 type
 
@@ -105,6 +105,7 @@ type
     rgTiltMode: TRadioGroup;
     SaveDialog1: TSaveDialog;
     StatusBar1: TStatusBar;
+    gridAttitude: TStringGrid;
     timerFCCommand: TTimer;
     timerFCHeartbeat: TTimer;
     tbTiltControl: TTrackBar;
@@ -149,7 +150,7 @@ var
   mount: TAttitudeData;
 
 const
-  AppVersion='V0.2 2024-03-03';
+  AppVersion='V0.4 2024-03-05';
   linkLazarus='https://www.lazarus-ide.org/';
   tab1=' ';
   tab2='  ';
@@ -207,6 +208,12 @@ begin
   lblBootTime.Caption:=capBootTime;
   lblBootTime.Hint:=hntBootTime;
   lblBootTimeOut.Caption:='';
+
+  gridAttitude.Cells[0, 0]:='Gimbal';
+  gridAttitude.Cells[1, 0]:=rsvalue+' [°]';
+  gridAttitude.Cells[0, 1]:='Tilt';
+  gridAttitude.Cells[0, 2]:='Pan';
+  gridAttitude.Cells[0, 3]:='Roll';
 end;
 
 function SendUARTMessage(const msg: TMAVmessage; LengthFixPart: byte): boolean;
@@ -222,7 +229,7 @@ end;
 
 function InvertPanControlPosition(pos: uint16): uint16;
 begin
-  result:=4096-pos;                   {??}
+  result:=4096-pos;
 end;
 
 procedure TForm1.StopAllTimer;
@@ -385,9 +392,13 @@ end;
 procedure TForm1.FillCharts;
 begin
   lblBootTimeOut.Caption:=FormatDateTime(timeHzzz, mount.boottime);
-  chPanLineSeries1.AddXY(MessagesReceived, mount.yaw);
   chTiltLineSeries1.AddXY(MessagesReceived, mount.pitch);
+  chPanLineSeries1.AddXY(MessagesReceived, mount.yaw);
   chRollLineSeries1.AddXY(MessagesReceived, mount.roll);
+
+  gridAttitude.Cells[1, 1]:=FormatFloat(floatformat2, mount.pitch);
+  gridAttitude.Cells[1, 2]:=FormatFloat(floatformat2, mount.yaw);
+  gridAttitude.Cells[1, 3]:=FormatFloat(floatformat3, mount.roll);
 end;
 
 function FormatBootTime(const data: TGPSdata): string;
@@ -462,13 +473,9 @@ begin
 {$IFDEF WINDOWS}
   cbPort.Text:='';
   cbPort.Items.Clear;
-  GimbalText.Lines.Clear;
   cbPort.Items.CommaText:=GetSerialPortNames;
   if cbPort.Items.Count>0 then begin
     cbPort.Text:=cbPort.Items[cbPort.Items.Count-1];
-    for i:=0 to  cbPort.Items.Count-1 do begin
-      GIMBALtext.Lines.Add(cbPort.Items[i]);
-    end;
     StatusBar1.Panels[2].Text:=cbPort.Items[cbPort.Items.Count-1];
   end else
     StatusBar1.Panels[2].Text:=errNoUSBport;
