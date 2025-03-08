@@ -68,8 +68,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   lclintf, lcltype, Buttons, ActnList, Process, XMLPropStorage, ComCtrls,
-  ValEdit, TAGraph, TASeries, TAChartUtils, synaser, MKnob,
-  clipbrd, Menus, Grids, mav_def, mav_msg;
+  TAGraph, TASeries, TAChartUtils, synaser, MKnob, Grids, mav_def, mav_msg;
 
 type
 
@@ -128,14 +127,16 @@ type
 
   private
     procedure StopAllTimer;
-    procedure CreateE90GimbalControl(var msg: TMavMessage; SequenceNumber: byte);
     procedure FillCharts;
     procedure GUIsetCaptionsAndHints;
-  public
-    procedure ReadMessage_FD(var msg: TMAVmessage);
-    procedure RecordMessage(msg: TMAVmessage; list: TStringList; LengthFixPart: byte);
-    procedure ActAsFlightController(var msg: TMAVmessage; list: TStringList);
     procedure NumberMessagesInStatusBar;
+    procedure ActAsFlightController(var msg: TMAVmessage; list: TStringList);
+
+  public
+    procedure CreateE90GimbalControlMessage(var msg: TMavMessage; const SequenceNumber: byte);
+    procedure CreateE90ControlHeartbeatMessage(var msg: TMAVmessage; const SequenceNumber: byte );
+    procedure ReadMessages_FD(var msg: TMAVmessage);
+    procedure RecordMessageAsCSV(msg: TMAVmessage; list: TStringList; LengthFixPart: byte);
   end;
 
   {$I E90Demo_en.inc}
@@ -154,6 +155,7 @@ const
   linkLazarus='https://www.lazarus-ide.org/';
   tab1=' ';
   tab2='  ';
+  csvseparator=';';
 
   maxPorts=10;
   timeout=100;
@@ -216,6 +218,32 @@ begin
   gridAttitude.Cells[0, 3]:='Roll';
 end;
 
+procedure TForm1.FormActivate(Sender: TObject);
+begin
+  StopAllTimer;
+  acScanPortsExecute(self);
+  btnConnect.SetFocus;
+end;
+
+procedure TForm1.acCloseExecute(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TForm1.StopAllTimer;
+begin
+  timerFCHeartbeat.Enabled:=false;
+  timerFCCommand.Enabled:=false;
+end;
+
+procedure SetStartValuesForGlobelVariables;
+begin
+  SequNumberTransmit:=0;
+  MessagesSent:=0;
+  MessagesReceived:=0;
+  starttime:=GetTickCount64;
+end;
+
 function SendUARTMessage(const msg: TMAVmessage; LengthFixPart: byte): boolean;
 begin
   result:=false;
@@ -232,12 +260,6 @@ begin
   result:=4096-pos;
 end;
 
-procedure TForm1.StopAllTimer;
-begin
-  timerFCHeartbeat.Enabled:=false;
-  timerFCCommand.Enabled:=false;
-end;
-
 procedure WriteCSVRawHeader(var list: TStringList);
 var
   s: string;
@@ -247,21 +269,27 @@ begin
   list.Clear;
   s:=rsTime;
   for i:=0 to 50 do
-    s:=s+';'+Format('%.*d', [2, i]);
+    s:=s+csvseparator+Format('%.*d', [2, i]);
   list.Add(s);
 end;
 
-procedure SetStartValuesForGlobelVariables;
+procedure TForm1.CreateE90ControlHeartbeatMessage(var msg: TMAVmessage; const SequenceNumber: byte );
 begin
-  SequNumberTransmit:=0;
-  MessagesSent:=0;
-  MessagesReceived:=0;
-  starttime:=GetTickCount64;
+  CreateE90StandardPartMsg(msg, 9);
+  msg.msgbytes[4]:=SequenceNumber;
+  msg.msgbytes[12]:=4;
+  msg.msgbytes[13]:=3;
+  msg.msgbytes[14]:=$0D;
+  msg.msgbytes[15]:=$0C;
+  msg.msgbytes[16]:=$1D;
+  msg.msgbytes[17]:=3;
+  msg.msgbytes[18]:=3;
+  SetCRC(msg, LengthFixPartFD, CRC_EXTRA_heartbeat);
 end;
 
-procedure TForm1.CreateE90GimbalControl(var msg: TMavMessage; SequenceNumber: byte);
+procedure TForm1.CreateE90GimbalControlMessage(var msg: TMavMessage; const SequenceNumber: byte);
 var
-  mode: uint16;
+  panmode, tiltmode: uint16;
 
 begin
   CreateE90StandardPartMsg(msg, $1A);
@@ -269,24 +297,23 @@ begin
   msg.msgbytes[6]:=1;                                  {CompID}
   SetUInt16ToMsg(msg, 7, 5000);                        {MsgID GimbalControl 5000}
 
-  mode:=830;
+  if rgTiltMode.ItemIndex=1 then
+    tiltmode:=3000
+  else
+    tiltmode:=2100;
+  if rgPanMode.ItemIndex=2 then
+    panmode:=3000
+  else
+    panmode:=830;
   if rgPanMode.ItemIndex=0 then
     SetUInt16ToMsg(msg, 24, 2048)
   else
     SetUInt16ToMsg(msg, 24, InvertPanControlPosition(knPanControl.Position));
-  if rgPanMode.ItemIndex=2 then
-    mode:=3000;
-
   SetUInt16ToMsg(msg, 26, tbTiltControl.Position);
+
   SetUInt16ToMsg(msg, 28, 2048);
-  SetUInt16ToMsg(msg, 30, mode);
-
-  if rgTiltMode.ItemIndex=1 then
-    mode:=3000
-  else
-    mode:=2100;
-
-  SetUInt16ToMsg(msg, 32, mode);
+  SetUInt16ToMsg(msg, 30, panmode);
+  SetUInt16ToMsg(msg, 32, tiltmode);
   SetUInt16ToMsg(msg, 34, 2048);
   SetCRC(msg, LengthFixPartFD, CRC_EXTRA_cmd5000);
 end;
@@ -302,7 +329,7 @@ begin
   {$ENDIF}
   UART.Connect(port);
   sleep(200);
-  UART.Config(StrToIntDef(speed, defaultbaud), 8, 'N', SB1, false, false); {Config default 115200 baud, 8N1}
+  UART.Config(StrToIntDef(speed, defaultbaud), 8, 'N', SB1, false, false);
   if UART.LastError=0 then begin
     UARTConnected:=true;
     result:='Status: '+UART.LastErrorDesc;
@@ -364,12 +391,7 @@ begin
   end;
 end;
 
-procedure TForm1.acCloseExecute(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TForm1.RecordMessage(msg: TMAVmessage; list: TStringList; LengthFixPart: byte);
+procedure TForm1.RecordMessageAsCSV(msg: TMAVmessage; list: TStringList; LengthFixPart: byte);
 var
   s: string;
   i: integer;
@@ -377,16 +399,9 @@ var
 begin
   s:=FormatFloat(floatformat3, (GetTickCount64-starttime)/1000);
   for i:=0 to msg.msglength+LengthFixPart+1 do begin
-    s:=s+';'+IntToHex(msg.msgbytes[i], 2);
+    s:=s+csvseparator+IntToHex(msg.msgbytes[i], 2);
   end;
   list.Add(s);
-end;
-
-function Uint16ToInt16(v: UInt16): int16;
-begin
-  result:=v and $7F;
-  if (v and $80)>0 then
-    result:=-result;
 end;
 
 procedure TForm1.FillCharts;
@@ -414,14 +429,14 @@ begin
   timerFCcommand.Enabled:=true;
   while (UART.LastError=0) and UARTConnected do begin
     if UART.CanRead(0) then begin
-      ReadMessage_FD(msg);
+      ReadMessages_FD(msg);
       if msg.valid then begin
         if msg.msgid32=$109 then begin
           MOUNT_ORIENTATION(msg, LengthFixPartFD, mount);
           FillCharts;
         end;
         if cbRecord.Checked then
-          RecordMessage(msg, list, LengthFixPartFD);
+          RecordMessageAsCSV(msg, list, LengthFixPartFD);
         inc(MessagesReceived);
       end;
     end;
@@ -429,7 +444,7 @@ begin
   end;
 end;
 
-procedure TForm1.ReadMessage_FD(var msg: TMAVmessage);
+procedure TForm1.ReadMessages_FD(var msg: TMAVmessage);
 var
   b: byte;
   i: integer;
@@ -440,16 +455,16 @@ begin
     b:=UART.RecvByte(timeout);
   until (b=MagicFD) or (UART.LastError<>0) or (not UARTConnected);
   msg.msgbytes[0]:=b;
+
   msg.msglength:=UART.RecvByte(timeout);
   msg.msgbytes[1]:=msg.msglength;
   for i:=2 to msg.msglength+LengthFixPartFD+1 do
     msg.msgbytes[i]:=UART.RecvByte(timeout);
-
   msg.msgid32:=MAVgetUInt32(msg, 7) and $FFFFFF;
+
   if CheckCRC16MAV(msg, LengthFixPartFD, 1, true, GetCRCextra(msg.msgid32)) then begin
     msg.sysid:=msg.msgbytes[5];
     msg.targetid:=msg.msgbytes[6];
-    msg.msgid:=msg.msgbytes[7];
     msg.valid:=true;
   end;
 end;
@@ -513,16 +528,6 @@ begin
   acScanPortsExecute(self);
 end;
 
-procedure TForm1.FormActivate(Sender: TObject);
-begin
-  if not UARTconnected then begin
-    StopAllTimer;
-    knPanControl.Position:=2048;
-    acScanPortsExecute(self);
-    btnConnect.SetFocus;
-  end;
-end;
-
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   DisconnectUART;
@@ -539,16 +544,7 @@ var
 
 begin
   if UARTConnected then begin
-    CreateE90StandardPartMsg(msg, 9);
-    msg.msgbytes[4]:=SequNumberTransmit;
-    msg.msgbytes[12]:=4;
-    msg.msgbytes[13]:=3;
-    msg.msgbytes[14]:=$0D;
-    msg.msgbytes[15]:=$0C;
-    msg.msgbytes[16]:=$1D;
-    msg.msgbytes[17]:=3;
-    msg.msgbytes[18]:=3;
-    SetCRC(msg, LengthFixPartFD, CRC_EXTRA_heartbeat);
+    CreateE90ControlHeartbeatMessage(msg, SequNumberTransmit);
     if SendUARTMessage(msg, LengthFixPartFD) then
       Inc(SequNumberTransmit);
   end;
@@ -561,7 +557,7 @@ var
 
 begin
   if UARTConnected then begin
-    CreateE90GimbalControl(msg, SequNumberTransmit);
+    CreateE90GimbalControlMessage(msg, SequNumberTransmit);
     if SendUARTMessage(msg, LengthFixPartFD) then
       Inc(SequNumberTransmit);
   end;
