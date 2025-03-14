@@ -151,7 +151,7 @@ var
   mount: TAttitudeData;
 
 const
-  AppVersion='V0.4 2024-03-05';
+  AppVersion='V0.5 2024-03-11';
   linkLazarus='https://www.lazarus-ide.org/';
   tab1=' ';
   tab2='  ';
@@ -159,7 +159,6 @@ const
 
   maxPorts=10;
   timeout=100;
-  defaultbaud=500000;
 
 {$IFDEF WINDOWS}
   default_port='COM6';
@@ -183,7 +182,7 @@ end;
 procedure TForm1.GUIsetCaptionsAndHints;
 begin
   Caption:=Application.Title+tab2+AppVersion;
-  cbSpeed.Text:=IntToStr(defaultbaud);
+  cbSpeed.Text:=IntToStr(defaultbaudE90);
   cbSpeed.Hint:=hntSpeed;
   cbPort.Hint:=hntPort;
   acScanPorts.Caption:=capPort;
@@ -292,7 +291,7 @@ var
   panmode, tiltmode: uint16;
 
 begin
-  CreateE90StandardPartMsg(msg, $1A);
+  CreateE90StandardPartMsg(msg, 26);
   msg.msgbytes[4]:=SequenceNumber;
   msg.msgbytes[6]:=1;                                  {CompID}
   SetUInt16ToMsg(msg, 7, 5000);                        {MsgID GimbalControl 5000}
@@ -329,7 +328,7 @@ begin
   {$ENDIF}
   UART.Connect(port);
   sleep(200);
-  UART.Config(StrToIntDef(speed, defaultbaud), 8, 'N', SB1, false, false);
+  UART.Config(StrToIntDef(speed, defaultbaudE90), 8, 'N', SB1, false, false);
   if UART.LastError=0 then begin
     UARTConnected:=true;
     result:='Status: '+UART.LastErrorDesc;

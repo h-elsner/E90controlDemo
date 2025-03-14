@@ -16,19 +16,19 @@ object Form1: TForm1
   LCLVersion = '3.7.0.0'
   object upperPanel: TPanel
     Left = 0
-    Height = 656
+    Height = 661
     Top = 0
     Width = 144
     Align = alLeft
-    ClientHeight = 656
+    ClientHeight = 661
     ClientWidth = 144
     TabOrder = 0
     object cbPort: TComboBox
       Left = 9
-      Height = 25
+      Height = 28
       Top = 10
       Width = 128
-      ItemHeight = 17
+      ItemHeight = 0
       ItemIndex = 0
       Items.Strings = (
         '/dev/ttyUSB0'
@@ -45,17 +45,15 @@ object Form1: TForm1
     end
     object cbSpeed: TComboBox
       Left = 9
-      Height = 25
+      Height = 28
       Top = 50
       Width = 128
-      ItemHeight = 17
+      ItemHeight = 0
       Items.Strings = (
-        '14400'
-        '19200'
-        '28800'
-        '38400'
+        '9600'
         '57600'
         '115200'
+        '230400'
         '500000'
       )
       TabOrder = 1
@@ -92,17 +90,17 @@ object Form1: TForm1
     end
     object cbRecord: TCheckBox
       Left = 9
-      Height = 21
+      Height = 23
       Top = 192
-      Width = 74
+      Width = 82
       Caption = 'cbRecord'
       TabOrder = 5
     end
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 23
-    Top = 656
+    Height = 18
+    Top = 661
     Width = 985
     Panels = <    
       item
@@ -118,7 +116,7 @@ object Form1: TForm1
   end
   object pcMain: TPageControl
     Left = 144
-    Height = 656
+    Height = 661
     Top = 0
     Width = 841
     ActivePage = tsFC
@@ -129,8 +127,8 @@ object Form1: TForm1
     TabOrder = 2
     object tsFC: TTabSheet
       Caption = 'FC'
-      ClientHeight = 626
-      ClientWidth = 833
+      ClientHeight = 631
+      ClientWidth = 831
       ImageIndex = 5
       object knPanControl: TmKnob
         Left = 208
@@ -155,8 +153,8 @@ object Form1: TForm1
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 99
-        ClientWidth = 44
+        ClientHeight = 104
+        ClientWidth = 46
         ItemIndex = 0
         Items.Strings = (
           'F'
@@ -179,8 +177,8 @@ object Form1: TForm1
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 99
-        ClientWidth = 44
+        ClientHeight = 104
+        ClientWidth = 46
         ItemIndex = 0
         Items.Strings = (
           'A'
@@ -202,9 +200,9 @@ object Form1: TForm1
       end
       object lblPanControl: TLabel
         Left = 224
-        Height = 17
+        Height = 16
         Top = 16
-        Width = 28
+        Width = 32
         Caption = '2048'
       end
       object btnCenter: TButton
@@ -220,7 +218,7 @@ object Form1: TForm1
         Left = 288
         Height = 207
         Top = 8
-        Width = 538
+        Width = 536
         AxisList = <        
           item
             Marks.LabelBrush.Style = bsClear
@@ -247,7 +245,7 @@ object Form1: TForm1
         Left = 288
         Height = 207
         Top = 208
-        Width = 538
+        Width = 536
         AxisList = <        
           item
             Marks.LabelBrush.Style = bsClear
@@ -274,7 +272,7 @@ object Form1: TForm1
         Left = 288
         Height = 207
         Top = 416
-        Width = 538
+        Width = 536
         AxisList = <        
           item
             Marks.LabelBrush.Style = bsClear
@@ -299,16 +297,16 @@ object Form1: TForm1
       end
       object lblBootTime: TLabel
         Left = 8
-        Height = 17
+        Height = 16
         Top = 170
-        Width = 69
+        Width = 73
         Caption = 'lblBootTime'
       end
       object lblBootTimeOut: TLabel
         Left = 136
-        Height = 17
+        Height = 16
         Top = 170
-        Width = 90
+        Width = 96
         Caption = 'lblBootTimeOut'
       end
       object gridAttitude: TStringGrid
